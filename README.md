@@ -12,7 +12,9 @@ TypedIds helps you avoid that by automatically generating typed IDs for you!
 TypedIds is built as a [.NET Roslyn Source Generator](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/); 
 you'll need to be running the .NET 5 SDK and the latest Visual Studio version.
 
-Basically, add a reference to the `TypedIds` NuGet package, then define a struct and add the `TypedId` attribute:
+## Using It
+
+Fairly straightforward; add a reference to the `TypedIds` NuGet package, then define a struct and add the `TypedId` attribute:
 
 ```csharp
 // It's important that it's partial so we can add to it!
@@ -36,6 +38,8 @@ public class Program
 
 When you add that `TypedId` attribute, we generate the implementation of your typed ID (currently just backed by a GUID),
 with standard equality operators, plus methods to parse identifiers from strings and access the underlying ID if required.
+
+The code it generates should show up in Solution Explorer, under `Project -> Analyzers -> TypedIds -> TypedIds.Generator`.
 
 ## Support for Serialisers
 
