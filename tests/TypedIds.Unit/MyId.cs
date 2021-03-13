@@ -51,5 +51,15 @@ namespace TypedIds.Unit
         }
 
         public bool Equals(MyId other) => _backingId.Equals(other._backingId);
+
+        public static bool operator ==(MyId left, MyId right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(MyId left, MyId right)
+        {
+            return !(left == right);
+        }
     }
 }

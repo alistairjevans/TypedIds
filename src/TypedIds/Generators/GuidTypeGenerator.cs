@@ -91,6 +91,16 @@ namespace TypedIds.Generators
         }}
 
         public bool Equals({name} other) => _backingId.Equals(other._backingId);
+
+        public static bool operator ==({name} left, {name} right)
+        {{
+            return left.Equals(right);
+        }}
+
+        public static bool operator !=({name} left, {name} right)
+        {{
+            return !(left == right);
+        }}
     }}
 ");
 
