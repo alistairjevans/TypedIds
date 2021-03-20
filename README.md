@@ -7,8 +7,6 @@ To get round this you'd often have to create custom wrapper types every time you
 
 TypedIds helps you avoid that by automatically generating typed IDs for you!
 
-> TypedIds is a very early work in progress!! It works for a simple case, but bear in mind it needs more work.
-
 TypedIds is built as a [.NET Roslyn Source Generator](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/); 
 you'll need to be running the .NET 5 SDK and the latest Visual Studio version.
 
@@ -36,29 +34,53 @@ public class Program
 }
 ```
 
-When you add that `TypedId` attribute, we generate the implementation of your typed ID (currently just backed by a GUID),
+When you add that `TypedId` attribute, we generate the implementation of your typed ID (which defaults to being backed by a GUID),
 with standard equality operators, plus methods to parse identifiers from strings and access the underlying ID if required.
 
 The code it generates should show up in Solution Explorer, under `Project -> Analyzers -> TypedIds -> TypedIds.Generator`.
+
+## Customise the Backing Type
+
+By default `TypedIds` uses a Guid as its backing value type. However, you can customise the type we store quite easily by passing parameters
+to the `TypedId` attribute:
+
+```csharp
+
+// Backed by a 32-bit int
+[TypedId(IdBackingType.Int)]
+public partial struct IntId
+{
+}
+
+// Backed by a 64-bit long
+[TypedId(IdBackingType.Long)]
+public partial struct LongId
+{
+}
+
+// Backed by a string
+[TypedId(IdBackingType.String)]
+public partial struct StringId
+{
+}
+
+```
 
 ## Support for Serialisers
 
 TypedIds automatically adds a TypeConverter implementation, so your IDs will "just work" in normal ASP.NET Core model binding.
 
-Additionally, we also support the following serialisers automatically. If the relevant library is referenced in your project, we'll
-generate the serialisers for you:
+Additionally, we also support the following serialisers/converters automatically. If the relevant library is referenced in your project, we'll
+generate the serialisers automatically for you:
 
 | Format | Referenced Library |
 | BSON (MongoDB) | MongoDB.Bson |
+| JSON | Newtonsoft.Json |
 
 ## Planned Features
 
-TypedId is a very basic implementation right now, but I plan to add support for:
-
-- More ID backing types (numerics, strings, etc)
 - Built in serialiser support for:
     - System.Text.Json
-    - Newtonsoft.Json
     - Entity Framework
     - More?
 
