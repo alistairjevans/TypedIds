@@ -73,9 +73,10 @@ TypedIds automatically adds a TypeConverter implementation, so your IDs will "ju
 Additionally, we also support the following serialisers/converters automatically. If the relevant library is referenced in your project, we'll
 generate the serialisers automatically for you:
 
-| Format | Referenced Library |
-| BSON (MongoDB) | MongoDB.Bson |
-| JSON | Newtonsoft.Json |
+| Format         | Referenced Library |
+| -------------- | ------------------ |
+| BSON (MongoDB) | MongoDB.Bson       |
+| JSON           | Newtonsoft.Json    |
 
 ## Planned Features
 
