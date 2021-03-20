@@ -1,9 +1,12 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using Templates.Int;
 
 namespace Templates
 {
+    [JsonConverter(typeof(ReplaceMeIntIdNewtonSoftConverter))]
     [BsonSerializer(typeof(ReplaceMeStringBsonSerialiser))]
     [TypeConverter(typeof(ReplaceMeIntTypeConverter))]
     public readonly partial struct ReplaceMeIntId : IEquatable<ReplaceMeIntId>

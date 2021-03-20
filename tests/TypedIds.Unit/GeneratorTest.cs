@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using Newtonsoft.Json;
 using System.Reflection;
 using Xunit;
 
@@ -294,7 +295,9 @@ namespace T
         private static Compilation CreateCompilation(string source)
             => CSharpCompilation.Create("compilation",
                 new[] { CSharpSyntaxTree.ParseText(source) },
-                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+                new[] { 
+                    MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(JsonConvert).GetTypeInfo().Assembly.Location)},
                 new CSharpCompilationOptions(OutputKind.ConsoleApplication));
     }
 }

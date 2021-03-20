@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -28,7 +29,8 @@ namespace ExampleProject
 
             var classExample = new ExampleOwner
             {
-                Id = Id2.FromInt(256),
+                IdGuid = Id1.New(),
+                Id = Id2Another.FromLong(256),
             };
 
             var bsonData = classExample.ToJson();
@@ -37,20 +39,24 @@ namespace ExampleProject
 
             var deserialised = BsonSerializer.Deserialize<ExampleOwner>(doc);
 
-            Id2 defaultState = default;
+            Id2Another defaultState = default;
 
-            if (defaultState != Id2.Zero)
+            if (defaultState != Id2Another.Zero)
             {
                 throw new InvalidOperationException();
             }
 
-            deserialised.Id.Equals(Id2.FromInt(256));
+            deserialised.Id.Equals(Id2Another.FromLong(256));
 
             var txtId = TextId.FromString("id1");
 
             var txtId2 = TextId.FromString("id2");
 
             txtId2.Equals(txtId);
+
+            var jsonConverted = Newtonsoft.Json.JsonConvert.SerializeObject(classExample);
+
+            var reconstructed = Newtonsoft.Json.JsonConvert.DeserializeObject<ExampleOwner>(jsonConverted);
         }
     }
 
@@ -59,8 +65,8 @@ namespace ExampleProject
     {
     }
 
-    [TypedId(IdBackingType.Int)]
-    public partial struct Id2
+    [TypedId(IdBackingType.Long)]
+    public partial struct Id2Another
     {
     }
 
@@ -77,7 +83,9 @@ namespace ExampleProject
 
     public class ExampleOwner
     {
-        public Id2 Id { get; set; }
+        public Id1 IdGuid { get; set; }
+
+        public Id2Another Id { get; set; }
     }
 
 }
