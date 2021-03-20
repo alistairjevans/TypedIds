@@ -17,11 +17,9 @@ namespace TypedIds
                                                                                                  DiagnosticSeverity.Error,
                                                                                                  isEnabledByDefault: true);
 
-        private static readonly IConverterGenerator[] _attributeBasedConverters = new IConverterGenerator[]
-        {
-            new GuidTypeConverterGenerator(),
-            new GuidBsonSerializerGenerator(),
-        };
+        private static readonly ITypeGenerator GuidGenerator = new GuidIdTypeGenerator();
+        private static readonly ITypeGenerator IntGenerator = new IntIdTypeGenerator();
+        private static readonly ITypeGenerator LongGenerator = new LongIdTypeGenerator();
 
         private const string AttributeSource = @"
 using System;
@@ -30,52 +28,64 @@ namespace TypedIds
     [AttributeUsage(AttributeTargets.Struct)]
     internal sealed class TypedIdAttribute : Attribute
     {
+        public TypedIdAttribute(IdBackingType backingType = IdBackingType.Guid)
+        {
+            BackingType = backingType;
+        }
+
+        public IdBackingType BackingType { get; }
     }
 }
         ";
+
+        private static readonly string IdBackingTypeSource = EnumRenderer.RenderEnumToSource<IdBackingType>();
 
         public void Execute(GeneratorExecutionContext context)
         {
             var rx = (SyntaxReceiver)context.SyntaxContextReceiver!;
 
-            // Go through each entry and add the appropriate types.
-            
-            foreach (var (owner, attribute) in rx.Types)
-            {
-                var semanticModel = context.Compilation.GetSemanticModel(owner.SyntaxTree);
+#pragma warning disable RS1024 // Compare symbols correctly (https://github.com/dotnet/roslyn-analyzers/issues/4469)
+            var trackSeenTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+#pragma warning restore RS1024 // Compare symbols correctly
 
-                var structSymbol = semanticModel.GetDeclaredSymbol(owner);
+            // Go through each entry and add the appropriate types.            
+            foreach (var (node, options) in rx.Types)
+            {
+                var semanticModel = context.Compilation.GetSemanticModel(node.SyntaxTree);
+
+                var structSymbol = semanticModel.GetDeclaredSymbol(node);
+
+                if (!trackSeenTypes.Add(structSymbol))
+                {
+                    // Seen already - duplicate attribute usage warning is going to show up.
+                    continue;
+                }
 
                 // First, validate.
-                if (ValidateType(context, owner, structSymbol, attribute))
+                if (ValidateType(context, node, structSymbol, options))
                 {
-                    var typeMetadata = new TypeAttachmentMetadata();
-
-                    // We're going to need System at least.
-                    typeMetadata.AddNamespace("System");
-
-                    // Let our converts add things, and add additional metadata that goes into our generator.
-                    foreach (var converter in _attributeBasedConverters)
+                    // Use the backing type to pick the generator.
+                    ITypeGenerator generator = options.BackingType switch
                     {
-                        if (converter.ShouldGenerate(context, structSymbol))
-                        {
-                            converter.AddSource(context, structSymbol, typeMetadata);
-                        }
+                        IdBackingType.Guid => GuidGenerator,
+                        IdBackingType.Int => IntGenerator,
+                        IdBackingType.Long => LongGenerator,
+                        _ => null,
+                    };
+
+                    if (generator is ITypeGenerator)
+                    {
+                        generator.CreateTypeExtension(context, structSymbol, options);
                     }
-
-                    // Now actually generate the type.
-                    var typeGenerator = new GuidTypeGenerator();
-
-                    typeGenerator.CreateTypeExtension(context, structSymbol, typeMetadata);
                 }
             }
         }
 
-        private bool ValidateType(GeneratorExecutionContext context, StructDeclarationSyntax owner, INamedTypeSymbol symbol, AttributeSyntax attribute)
+        private bool ValidateType(GeneratorExecutionContext context, StructDeclarationSyntax owner, INamedTypeSymbol symbol, GenerationOptions options)
         {
             if (!owner.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
-                context.ReportDiagnostic(Diagnostic.Create(TypeIsNotPartial, owner.GetLocation(), symbol.Name));
+                context.ReportDiagnostic(Diagnostic.Create(TypeIsNotPartial, owner.Identifier.GetLocation(), symbol.Name));
 
                 return false;
             }
@@ -85,13 +95,16 @@ namespace TypedIds
 
         public void Initialize(GeneratorInitializationContext context)
         {
-            context.RegisterForPostInitialization(pi => pi.AddSource("TypedId_Attrs_", AttributeSource));
+            context.RegisterForPostInitialization(pi => {
+                pi.AddSource("TypedId_Attrs_", AttributeSource);
+                pi.AddSource("TypedId_Enums_IdBackingType", IdBackingTypeSource);
+            });
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
         private class SyntaxReceiver : ISyntaxContextReceiver
         {
-            public List<(StructDeclarationSyntax Owner, AttributeSyntax Attribute)> Types { get; } = new();
+            public List<(StructDeclarationSyntax Node, GenerationOptions Options)> Types { get; } = new();
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
@@ -104,9 +117,7 @@ namespace TypedIds
 
                     if (owningStruct is object)
                     {
-                        var symbol = context.SemanticModel.GetSymbolInfo(owningStruct);
-
-                        Types.Add((owningStruct, attrib));
+                        Types.Add((owningStruct, GenerationOptions.FromAttribute(attrib, context.SemanticModel)));
                     }
                 }
             }

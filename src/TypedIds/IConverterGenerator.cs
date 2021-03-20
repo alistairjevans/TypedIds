@@ -2,10 +2,10 @@
 
 namespace TypedIds
 {
-    public interface IConverterGenerator
+    internal interface IConverterGenerator
     {
-        bool ShouldGenerate(GeneratorExecutionContext context, INamedTypeSymbol generatingForType);
+        bool ShouldGenerate(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, GenerationOptions options);
 
-        void AddSource(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, TypeAttachmentMetadata metadata);
+        void AddSource(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, TypeAttachmentMetadata metadata, GenerationOptions options);
     }
 }

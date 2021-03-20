@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace TypedIds.Unit
+namespace Templates
 {
-    class MyIdTypeConverter : TypeConverter
+    class ReplaceMeIntTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
@@ -13,7 +13,7 @@ namespace TypedIds.Unit
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value is string text && MyId.TryParse(text, out var id))
+            if (value is string text && ReplaceMeIntId.TryParse(text, out var id))
             {
                 return id;
             }

@@ -4,8 +4,8 @@
 
 namespace TypedIds
 {
-    public interface ITypeGenerator
+    internal interface ITypeGenerator
     {
-        void CreateTypeExtension(GeneratorExecutionContext context, INamedTypeSymbol extendingTypeSymbol, TypeAttachmentMetadata metadata);
+        void CreateTypeExtension(GeneratorExecutionContext context, INamedTypeSymbol extendingTypeSymbol, GenerationOptions options);
     }
 }

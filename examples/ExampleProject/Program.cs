@@ -13,6 +13,12 @@ namespace ExampleProject
         public static void Main()
         {
             var id = Id1.New();
+            var idSecond = Id1.New();
+
+            if (id == idSecond)
+            {
+
+            }
 
             var converter = TypeDescriptor.GetConverter(id);
 
@@ -22,7 +28,7 @@ namespace ExampleProject
 
             var classExample = new ExampleOwner
             {
-                Id = Id1.New(),
+                Id = Id2.FromInt(256),
             };
 
             var bsonData = classExample.ToJson();
@@ -30,6 +36,15 @@ namespace ExampleProject
             var doc = BsonDocument.Parse(bsonData);
 
             var deserialised = BsonSerializer.Deserialize<ExampleOwner>(doc);
+
+            Id2 defaultState = default;
+
+            if (defaultState != Id2.Zero)
+            {
+                throw new InvalidOperationException();
+            }
+
+            deserialised.Id.Equals(Id2.FromInt(256));
         }
     }
 
@@ -38,15 +53,19 @@ namespace ExampleProject
     {
     }
 
-    [TypedId]
-    internal partial struct Id2
+    [TypedId(IdBackingType.Int)]
+    public partial struct Id2
     {
+    }
 
+    [TypedId]
+    public partial struct Id22
+    {
     }
 
     public class ExampleOwner
     {
-        public Id1 Id { get; set; }
+        public Id2 Id { get; set; }
     }
 
 }

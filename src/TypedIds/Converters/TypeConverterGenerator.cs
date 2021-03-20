@@ -2,15 +2,15 @@
 
 namespace TypedIds.Converters
 {
-    class GuidTypeConverterGenerator : BaseGeneratedTypeFormatter, IConverterGenerator
+    internal class TypeConverterGenerator : BaseGeneratedTypeFormatter, IConverterGenerator
     {
-        public bool ShouldGenerate(GeneratorExecutionContext context, INamedTypeSymbol generatingForType)
+        public bool ShouldGenerate(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, GenerationOptions options)
         {
             // Can always generate a TypeConverter for Guids.
             return true;
         }
 
-        public void AddSource(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, TypeAttachmentMetadata metadata)
+        public void AddSource(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, TypeAttachmentMetadata metadata, GenerationOptions options)
         {
             var code = WrapWithNamespaceIfNeeded(generatingForType, CreateSource(generatingForType));
 
