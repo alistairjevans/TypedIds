@@ -68,9 +68,10 @@ public partial struct StringId
 
 ## Support for Serialisers
 
-TypedIds automatically adds a TypeConverter implementation, so your IDs will "just work" in normal ASP.NET Core model binding.
+TypedIds automatically adds a TypeConverter implementation, so your IDs should already "just work" in a variety of typical conversion situations, including
+ASP.NET Core model binding.
 
-Additionally, we also support the following serialisers/converters automatically. If the relevant library is referenced in your project, we'll
+Additionally, we also currently support the following serialisers/converters. If the relevant library is referenced in your project, we'll
 generate the serialisers automatically for you:
 
 | Format         | Referenced Library |
