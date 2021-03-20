@@ -2,11 +2,11 @@
 
 namespace TypedIds.Converters
 {
-    internal class TypeConverterGenerator : BaseGeneratedTypeFormatter, IConverterGenerator
+    internal class StringTypeConverterGenerator : BaseGeneratedTypeFormatter, IConverterGenerator
     {
         public bool ShouldGenerate(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, GenerationOptions options)
         {
-            // Can always generate a TypeConverter for Guids.
+            // Can always generate a TypeConverter for strings.
             return true;
         }
 
@@ -38,9 +38,9 @@ namespace TypedIds.Converters
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {{
-            if (value is string text && {name}.TryParse(text, out var id))
+            if (value is string text)
             {{
-                return id;
+                return {name}.FromString(text);
             }}
 
             return base.ConvertFrom(context, culture, value);

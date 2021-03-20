@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Templates
 {
-    [BsonSerializer(typeof(ReplaceMeIntBsonSerialiser))]
+    [BsonSerializer(typeof(ReplaceMeStringBsonSerialiser))]
     [TypeConverter(typeof(ReplaceMeIntTypeConverter))]
     public readonly partial struct ReplaceMeIntId : IEquatable<ReplaceMeIntId>
     {

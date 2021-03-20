@@ -7,7 +7,7 @@ namespace TypedIds.Generators
     {
         public IntIdTypeGenerator()
             : base(new IntBsonSerializerGenerator(),
-                   new TypeConverterGenerator())
+                   new ParsingTypeConverterGenerator())
         {
         }
 

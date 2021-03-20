@@ -20,6 +20,7 @@ namespace TypedIds
         private static readonly ITypeGenerator GuidGenerator = new GuidIdTypeGenerator();
         private static readonly ITypeGenerator IntGenerator = new IntIdTypeGenerator();
         private static readonly ITypeGenerator LongGenerator = new LongIdTypeGenerator();
+        private static readonly ITypeGenerator StringGenerator = new StringIdTypeGenerator();
 
         private const string AttributeSource = @"
 using System;
@@ -70,6 +71,7 @@ namespace TypedIds
                         IdBackingType.Guid => GuidGenerator,
                         IdBackingType.Int => IntGenerator,
                         IdBackingType.Long => LongGenerator,
+                        IdBackingType.String => StringGenerator,
                         _ => null,
                     };
 

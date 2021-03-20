@@ -124,6 +124,91 @@ namespace T
         }
 
         [Fact]
+        public void CanGenerateLongType()
+        {
+            var inputCompilation = CreateCompilation(@"
+
+using TypedIds;
+
+namespace T
+{
+    [TypedId(IdBackingType.Long)]
+    public partial struct ValueItem
+    {   
+    }
+}
+
+            ");
+
+            var generator = new Generator();
+
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+
+            driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out var outputCompilation, out var diagnostics);
+
+            var result = driver.GetRunResult();
+
+            Assert.Empty(result.Diagnostics);
+
+            result.AssertGeneratedFile("T.ValueItem.Generated.cs", tree =>
+            {
+                var treeText = tree.GetText().ToString();
+
+                // Make sure we created an int generator.
+                Assert.Contains("private readonly long _backingId;", treeText);
+
+                // Check that the typeconverter gets added.
+                Assert.Contains("[TypeConverter(typeof(ValueItemTypeConverter))]", treeText);
+            });
+
+            result.AssertGeneratedFile("T.ValueItem.TypeConverter.cs");
+        }
+
+
+        [Fact]
+        public void CanGenerateStringType()
+        {
+            var inputCompilation = CreateCompilation(@"
+
+using TypedIds;
+
+namespace T
+{
+    [TypedId(IdBackingType.String)]
+    public partial struct ValueItem
+    {   
+    }
+}
+
+            ");
+
+            var generator = new Generator();
+
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+
+            driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out var outputCompilation, out var diagnostics);
+
+            var result = driver.GetRunResult();
+
+            Assert.Empty(result.Diagnostics);
+
+            result.AssertGeneratedFile("T.ValueItem.Generated.cs", tree =>
+            {
+                var treeText = tree.GetText().ToString();
+
+                // Make sure we created an int generator.
+                Assert.Contains("private readonly string _backingId;", treeText);
+
+                // Check that the typeconverter gets added.
+                Assert.Contains("[TypeConverter(typeof(ValueItemTypeConverter))]", treeText);
+            });
+
+            result.AssertGeneratedFile("T.ValueItem.TypeConverter.cs");
+        }
+
+
+
+        [Fact]
         public void CanRecoverFromBadAttributeState()
         {
             var inputCompilation = CreateCompilation(@"
@@ -194,9 +279,15 @@ namespace T
 
             var result = driver.GetRunResult();
 
-            Assert.Collection(result.Diagnostics, el =>
+            result.AssertGeneratedFile("T.ValueItem.Generated.cs", tree =>
             {
-                Assert.Equal("TYPEDID002", el.Id);
+                var treeText = tree.GetText().ToString();
+
+                // Make sure we created an int generator.
+                Assert.Contains("private readonly Guid _backingId;", treeText);
+
+                // Check that the typeconverter gets added.
+                Assert.Contains("[TypeConverter(typeof(ValueItemTypeConverter))]", treeText);
             });
         }
 

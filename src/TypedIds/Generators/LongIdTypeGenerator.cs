@@ -7,7 +7,7 @@ namespace TypedIds.Generators
     {
         public LongIdTypeGenerator()
             : base(new LongBsonSerializerGenerator(),
-                   new TypeConverterGenerator())
+                   new ParsingTypeConverterGenerator())
         {
         }
 

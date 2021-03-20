@@ -45,6 +45,12 @@ namespace ExampleProject
             }
 
             deserialised.Id.Equals(Id2.FromInt(256));
+
+            var txtId = TextId.FromString("id1");
+
+            var txtId2 = TextId.FromString("id2");
+
+            txtId2.Equals(txtId);
         }
     }
 
@@ -61,6 +67,12 @@ namespace ExampleProject
     [TypedId]
     public partial struct Id22
     {
+    }
+
+    [TypedId(IdBackingType.String)]
+    public partial struct TextId
+    {
+
     }
 
     public class ExampleOwner
