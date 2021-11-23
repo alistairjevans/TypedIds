@@ -3,11 +3,19 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 	<OutputType>exe</OutputType>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.12.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.10.0">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
+		<PrivateAssets>All</PrivateAssets>
+	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>

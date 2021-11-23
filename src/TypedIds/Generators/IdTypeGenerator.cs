@@ -27,7 +27,7 @@ namespace TypedIds.Generators
                 }
             }
 
-            var code = WrapWithNamespaceIfNeeded(extendingTypeSymbol, FormatType(extendingTypeSymbol, metadata));
+            var code = WrapSourceOutput(extendingTypeSymbol, FormatType(extendingTypeSymbol, metadata));
 
             context.AddSource(GetGeneratedFileName(extendingTypeSymbol, "Generated"), code);
         }

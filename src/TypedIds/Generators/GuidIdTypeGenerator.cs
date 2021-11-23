@@ -60,10 +60,13 @@ namespace TypedIds.Generators
         /// </summary>
         public Guid ToGuid() => _backingId;
 
+        /// <inheritdoc />
         public override int GetHashCode() => _backingId.GetHashCode();
 
+        /// <inheritdoc />
         public override string ToString() => _backingId.ToString(""N"");
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {{
             if (obj is {typeName} otherId)
@@ -74,13 +77,16 @@ namespace TypedIds.Generators
             return false;
         }}
 
+        /// <inheritdoc />
         public bool Equals({typeName} other) => _backingId.Equals(other._backingId);
 
+        /// <inheritdoc />
         public static bool operator ==({typeName} left, {typeName} right)
         {{
             return left.Equals(right);
         }}
 
+        /// <inheritdoc />
         public static bool operator !=({typeName} left, {typeName} right)
         {{
             return !(left == right);

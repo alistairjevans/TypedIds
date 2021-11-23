@@ -19,10 +19,13 @@ namespace Templates
             _backingId = content;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode() => _backingId.GetHashCode();
 
+        /// <inheritdoc />
         public override string ToString() => _backingId;
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (obj is ReplaceMeStringId otherId)
@@ -33,13 +36,16 @@ namespace Templates
             return false;
         }
 
+        /// <inheritdoc />
         public bool Equals(ReplaceMeStringId other) => _backingId.Equals(other._backingId, StringComparison.Ordinal);
 
+        /// <inheritdoc />
         public static bool operator ==(ReplaceMeStringId left, ReplaceMeStringId right)
         {
             return left.Equals(right);
         }
 
+        /// <inheritdoc />
         public static bool operator !=(ReplaceMeStringId left, ReplaceMeStringId right)
         {
             return !(left == right);

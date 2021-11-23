@@ -12,7 +12,7 @@ namespace TypedIds.Converters
 
         public void AddSource(GeneratorExecutionContext context, INamedTypeSymbol generatingForType, TypeAttachmentMetadata metadata, GenerationOptions options)
         {
-            var code = WrapWithNamespaceIfNeeded(generatingForType, CreateSource(generatingForType.Name));
+            var code = WrapSourceOutput(generatingForType, CreateSource(generatingForType.Name));
 
             context.AddSource(GetGeneratedFileName(generatingForType, "NsJsonConverter"), code);
 

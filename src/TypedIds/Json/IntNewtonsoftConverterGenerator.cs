@@ -10,7 +10,7 @@ namespace TypedIds.Converters
     using System;
     using Newtonsoft.Json;
 
-    public class {typeName}NsJsonConverter : JsonConverter
+    class {typeName}NsJsonConverter : JsonConverter
     {{
         public override bool CanConvert(Type objectType)
         {{
