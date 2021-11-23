@@ -119,6 +119,13 @@ namespace T
 
                 // Check that the typeconverter gets added.
                 Assert.Contains("[TypeConverter(typeof(ValueItemTypeConverter))]", treeText);
+
+#if NET5_0_OR_GREATER
+                // Check that the system.text.json typeconverter gets added.
+                Assert.Contains("[System.Text.Json.Serialization.JsonConverter(typeof(ValueItemSystemJsonConverter))]", treeText);
+#else
+                Assert.DoesNotContain("[System.Text.Json.Serialization.JsonConverter(typeof(ValueItemSystemJsonConverter))]", treeText);
+#endif
             });
 
             result.AssertGeneratedFile("T.ValueItem.TypeConverter.cs");
@@ -207,8 +214,6 @@ namespace T
             result.AssertGeneratedFile("T.ValueItem.TypeConverter.cs");
         }
 
-
-
         [Fact]
         public void CanRecoverFromBadAttributeState()
         {
@@ -295,9 +300,13 @@ namespace T
         private static Compilation CreateCompilation(string source)
             => CSharpCompilation.Create("compilation",
                 new[] { CSharpSyntaxTree.ParseText(source) },
-                new[] { 
-                    MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(JsonConvert).GetTypeInfo().Assembly.Location)},
+                new [] {
+                    MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location)
+                    ,MetadataReference.CreateFromFile(typeof(JsonConvert).GetTypeInfo().Assembly.Location)
+#if NET5_0_OR_GREATER
+                    ,MetadataReference.CreateFromFile(typeof(System.Text.Json.JsonSerializer).GetTypeInfo().Assembly.Location)
+#endif
+                },
                 new CSharpCompilationOptions(OutputKind.ConsoleApplication));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Generic;
 using System.Text;
 
 #nullable enable
@@ -12,9 +13,22 @@ namespace TypedIds
         {
             if (extendingTypeSymbol.ContainingNamespace is INamespaceSymbol nSpace && nSpace.Name != string.Empty)
             {
+                var namespaceComponents = new Stack<string>();
+
+                namespaceComponents.Push(nSpace.Name);
+
+                while (nSpace.ContainingNamespace is object && nSpace.ContainingNamespace.Name != string.Empty)
+                {
+                    nSpace = nSpace.ContainingNamespace;
+
+                    namespaceComponents.Push(nSpace.Name);
+                }
+
+                string fullname = string.Join(".", namespaceComponents);
+
                 // In a namespace; wrap the formatted type as well.
                 return SourceText.From($@"
-namespace {nSpace.Name} {{
+namespace {fullname} {{
 {source}
 }}
                 ", Encoding.UTF8);

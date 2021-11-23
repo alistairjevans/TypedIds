@@ -1,13 +1,14 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text.Json;
 using TypedIds;
 
-namespace ExampleProject
+namespace ExampleProject.NestedNameSpace
 {
     public static class Program
     {
@@ -31,6 +32,7 @@ namespace ExampleProject
             {
                 IdGuid = Id1.New(),
                 Id = Id2Another.FromLong(256),
+                TxtId = TextId.FromString("hello"),
             };
 
             var bsonData = classExample.ToJson();
@@ -54,9 +56,15 @@ namespace ExampleProject
 
             txtId2.Equals(txtId);
 
-            var jsonConverted = Newtonsoft.Json.JsonConvert.SerializeObject(classExample);
+            //var jsonConverted = Newtonsoft.Json.JsonConvert.SerializeObject(classExample);
 
-            var reconstructed = Newtonsoft.Json.JsonConvert.DeserializeObject<ExampleOwner>(jsonConverted);
+            //var reconstructed = Newtonsoft.Json.JsonConvert.DeserializeObject<ExampleOwner>(jsonConverted);
+
+            //var 
+
+            var jsonConverted = JsonSerializer.Serialize(classExample);
+
+            var reconstructed = JsonSerializer.Deserialize<ExampleOwner>(jsonConverted);
         }
     }
 
@@ -78,7 +86,6 @@ namespace ExampleProject
     [TypedId(IdBackingType.String)]
     public partial struct TextId
     {
-
     }
 
     public class ExampleOwner
@@ -86,6 +93,8 @@ namespace ExampleProject
         public Id1 IdGuid { get; set; }
 
         public Id2Another Id { get; set; }
+
+        public TextId TxtId { get; set; }
     }
 
 }

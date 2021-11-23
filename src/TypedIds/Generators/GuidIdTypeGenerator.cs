@@ -7,7 +7,8 @@ namespace TypedIds.Generators
     {
         public GuidIdTypeGenerator()
             : base(new GuidBsonSerializerGenerator(),
-                   new ParsingTypeConverterGenerator())
+                   new ParsingTypeConverterGenerator(),
+                   new GuidSystemJsonConverterGenerator())
         {
         }
 

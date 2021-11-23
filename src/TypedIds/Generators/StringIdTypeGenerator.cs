@@ -7,7 +7,8 @@ namespace TypedIds.Generators
     {
         public StringIdTypeGenerator()
             : base(new StringBsonSerializerGenerator(),
-                   new StringTypeConverterGenerator())
+                   new StringTypeConverterGenerator(),
+                   new StringSystemJsonConverterGenerator())
         {
         }
 

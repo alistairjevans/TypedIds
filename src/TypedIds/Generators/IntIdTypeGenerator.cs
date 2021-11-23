@@ -8,7 +8,8 @@ namespace TypedIds.Generators
         public IntIdTypeGenerator()
             : base(new IntBsonSerializerGenerator(),
                    new ParsingTypeConverterGenerator(),
-                   new IntNewtonsoftConverterGenerator())
+                   new IntNewtonsoftConverterGenerator(),
+                   new IntSystemJsonConverterGenerator())
         {
         }
 
