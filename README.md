@@ -78,11 +78,11 @@ generate the serialisers automatically for you:
 | -------------- | ------------------ |
 | BSON (MongoDB) | MongoDB.Bson       |
 | JSON           | Newtonsoft.Json    |
+| JSON           | .NET5+             |
 
 ## Planned Features
 
 - Built in serialiser support for:
-    - System.Text.Json
     - Entity Framework
     - More?
 
