@@ -16,7 +16,7 @@ namespace TypedIds.Converters
 
             context.AddSource(GetGeneratedFileName(generatingForType, "NsJsonConverter"), code);
 
-            metadata.AddAttributeLiteral($"Newtonsoft.Json.JsonConverter(typeof({generatingForType.Name}NsJsonConverter))");
+            metadata.AddAttributeLiteral($"Newtonsoft.Json.JsonConverter(typeof({generatingForType.Name}.{generatingForType.Name}NsJsonConverter))");
         }
 
         protected abstract string CreateSource(string typeName);

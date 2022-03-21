@@ -9,20 +9,23 @@
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    class {typeName}BsonSerialiser : SerializerBase<{typeName}>
+    partial struct {typeName} 
     {{
-        private readonly GuidSerializer _guidSerialiser = new GuidSerializer(GuidRepresentation.Standard);
-
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+        public class {typeName}BsonSerialiser : SerializerBase<{typeName}>
         {{
-            _guidSerialiser.Serialize(context, args, value.ToGuid());
-        }}
+            private readonly GuidSerializer _guidSerialiser = new GuidSerializer(GuidRepresentation.Standard);
 
-        public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
-        {{
-            var guid = _guidSerialiser.Deserialize(context, args);
+            public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+            {{
+                _guidSerialiser.Serialize(context, args, value.ToGuid());
+            }}
 
-            return {typeName}.FromGuid(guid);
+            public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+            {{
+                var guid = _guidSerialiser.Deserialize(context, args);
+
+                return {typeName}.FromGuid(guid);
+            }}
         }}
     }}
 ";

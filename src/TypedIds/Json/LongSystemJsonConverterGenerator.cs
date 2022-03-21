@@ -11,16 +11,19 @@ namespace TypedIds.Converters
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    class {typeName}SystemJsonConverter : JsonConverter<{typeName}>
+    partial struct {typeName} 
     {{
-        public override {typeName} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public class {typeName}SystemJsonConverter : JsonConverter<{typeName}>
         {{
-            return {typeName}.FromLong(reader.GetInt64());
-        }}
+            public override {typeName} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {{
+                return {typeName}.FromLong(reader.GetInt64());
+            }}
 
-        public override void Write(Utf8JsonWriter writer, {typeName} value, JsonSerializerOptions options)
-        {{
-            writer.WriteNumberValue(value.ToLong());
+            public override void Write(Utf8JsonWriter writer, {typeName} value, JsonSerializerOptions options)
+            {{
+                writer.WriteNumberValue(value.ToLong());
+            }}
         }}
     }}
 ";

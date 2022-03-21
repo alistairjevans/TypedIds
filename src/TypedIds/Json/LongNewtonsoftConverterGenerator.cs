@@ -10,37 +10,40 @@ namespace TypedIds.Converters
     using System;
     using Newtonsoft.Json;
 
-    class {typeName}NsJsonConverter : JsonConverter
+    partial struct {typeName} 
     {{
-        public override bool CanConvert(Type objectType)
+        public class {typeName}NsJsonConverter : JsonConverter
         {{
-            return objectType == typeof({typeName});
-        }}
-
-        public override bool CanRead => true;
-
-        public override bool CanWrite => true;
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {{
-            if (reader.ValueType == typeof(int))
+            public override bool CanConvert(Type objectType)
             {{
-                return {typeName}.FromLong((long)(int)reader.Value);
+                return objectType == typeof({typeName});
             }}
 
-            if (reader.ValueType == typeof(long))
+            public override bool CanRead => true;
+
+            public override bool CanWrite => true;
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {{
-                return {typeName}.FromLong((long)reader.Value);
+                if (reader.ValueType == typeof(int))
+                {{
+                    return {typeName}.FromLong((long)(int)reader.Value);
+                }}
+
+                if (reader.ValueType == typeof(long))
+                {{
+                    return {typeName}.FromLong((long)reader.Value);
+                }}
+
+                throw new JsonSerializationException($""Cannot deserialise {typeName} from {{reader.Value}}"");
             }}
 
-            throw new JsonSerializationException($""Cannot deserialise {typeName} from {{reader.Value}}"");
-        }}
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {{
-            if (value is {typeName} id)
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {{
-                writer.WriteValue(id.ToLong());
+                if (value is {typeName} id)
+                {{
+                    writer.WriteValue(id.ToLong());
+                }}
             }}
         }}
     }}

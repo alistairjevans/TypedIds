@@ -9,20 +9,23 @@
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    class {typeName}BsonSerialiser : SerializerBase<{typeName}>
+    partial struct {typeName} 
     {{
-        private readonly StringSerializer _strSerializer = new StringSerializer();
-
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+        public class {typeName}BsonSerialiser : SerializerBase<{typeName}>
         {{
-           _strSerializer.Serialize(context, args, value.ToString());
-        }}
+            private readonly StringSerializer _strSerializer = new StringSerializer();
 
-        public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
-        {{
-            var text = _strSerializer.Deserialize(context, args);
+            public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+            {{
+               _strSerializer.Serialize(context, args, value.ToString());
+            }}
 
-            return {typeName}.FromString(text ?? string.Empty);
+            public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+            {{
+                var text = _strSerializer.Deserialize(context, args);
+
+                return {typeName}.FromString(text ?? string.Empty);
+            }}
         }}
     }}
 ";

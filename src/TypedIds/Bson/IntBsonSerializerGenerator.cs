@@ -12,20 +12,23 @@ namespace TypedIds.Converters
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    class {typeName}BsonSerialiser : SerializerBase<{typeName}>
+    partial struct {typeName} 
     {{
-        private readonly Int32Serializer _intSerializer = new Int32Serializer();
-
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+        public class {typeName}BsonSerialiser : SerializerBase<{typeName}>
         {{
-            _intSerializer.Serialize(context, args, value.ToInt());
-        }}
+            private readonly Int32Serializer _intSerializer = new Int32Serializer();
 
-        public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
-        {{
-            var number = _intSerializer.Deserialize(context, args);
+            public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, {typeName} value)
+            {{
+                _intSerializer.Serialize(context, args, value.ToInt());
+            }}
 
-            return {typeName}.FromInt(number);
+            public override {typeName} Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+            {{
+                var number = _intSerializer.Deserialize(context, args);
+
+                return {typeName}.FromInt(number);
+            }}
         }}
     }}
 ";

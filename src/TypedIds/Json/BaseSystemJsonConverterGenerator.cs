@@ -29,7 +29,7 @@ namespace TypedIds.Converters
 
             context.AddSource(GetGeneratedFileName(generatingForType, "SystemJsonConverter"), code);
 
-            metadata.AddAttributeLiteral($"System.Text.Json.Serialization.JsonConverter(typeof({generatingForType.Name}SystemJsonConverter))");
+            metadata.AddAttributeLiteral($"System.Text.Json.Serialization.JsonConverter(typeof({generatingForType.Name}.{generatingForType.Name}SystemJsonConverter))");
         }
 
         protected abstract string CreateSource(string typeName);

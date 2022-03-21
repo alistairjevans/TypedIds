@@ -16,7 +16,7 @@ namespace TypedIds.Converters
 
             context.AddSource(GetGeneratedFileName(generatingForType, "BsonSerializer"), code);
 
-            metadata.AddAttributeLiteral($"BsonSerializer(typeof({generatingForType.Name}BsonSerialiser))");
+            metadata.AddAttributeLiteral($"BsonSerializer(typeof({generatingForType.Name}.{generatingForType.Name}BsonSerialiser))");
             metadata.AddNamespace("MongoDB.Bson.Serialization.Attributes");
         }
 
